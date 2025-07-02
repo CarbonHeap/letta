@@ -5,6 +5,8 @@ import asyncio
 from datetime import datetime, timezone
 from typing import List, Optional
 
+from letta.streaming_interface import StreamingRefreshCLIInterface
+
 from letta.agent import AgentState
 from letta.constants import DEFAULT_MAX_MESSAGE_BUFFER_LENGTH, DEFAULT_MIN_MESSAGE_BUFFER_LENGTH
 from letta.memory import summarize_messages
@@ -134,6 +136,10 @@ def test_summarization():
     
     # Enable streaming for production
     agent_state.llm_config.stream = True
+    
+    # Initialize streaming interface
+    streaming_interface = StreamingRefreshCLIInterface(fancy=True, separate_send_message=True)
+    streaming_interface.stream_start()
     
     print(f"\nTesting summarization with {len(messages)} messages...")
     print(f"Buffer limits: max={DEFAULT_MAX_MESSAGE_BUFFER_LENGTH}, min={DEFAULT_MIN_MESSAGE_BUFFER_LENGTH}")

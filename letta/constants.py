@@ -57,8 +57,8 @@ MIN_CONTEXT_WINDOW = 4096
 EMBEDDING_BATCH_SIZE = 200
 
 # Voice Sleeptime message buffer lengths
-DEFAULT_MAX_MESSAGE_BUFFER_LENGTH = 30
-DEFAULT_MIN_MESSAGE_BUFFER_LENGTH = 15
+DEFAULT_MAX_MESSAGE_BUFFER_LENGTH = 100  # Increased for better context retention
+DEFAULT_MIN_MESSAGE_BUFFER_LENGTH = 30   # Increased to maintain more context
 
 # embeddings
 MAX_EMBEDDING_DIM = 4096  # maximum supported embeding size - do NOT change or else DBs will need to be reset

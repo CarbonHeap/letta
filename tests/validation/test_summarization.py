@@ -132,6 +132,9 @@ def test_summarization():
     agent_state = create_test_state()
     user = create_test_user()
     
+    # Enable streaming for production
+    agent_state.llm_config.stream = True
+    
     print(f"\nTesting summarization with {len(messages)} messages...")
     print(f"Buffer limits: max={DEFAULT_MAX_MESSAGE_BUFFER_LENGTH}, min={DEFAULT_MIN_MESSAGE_BUFFER_LENGTH}")
     

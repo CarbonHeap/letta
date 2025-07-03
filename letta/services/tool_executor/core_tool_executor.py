@@ -1,5 +1,10 @@
 import math
+import time
 from typing import Any, Dict, Optional
+
+from letta.log import get_logger
+
+logger = get_logger(__name__)
 
 from letta.constants import (
     CORE_MEMORY_LINE_NUMBER_WARNING,
@@ -174,6 +179,9 @@ class LettaCoreToolExecutor(ToolExecutor):
         Returns:
             Optional[str]: None is always returned as this function does not produce a response.
         """
+        logger.info(f"Starting archival_memory_insert for agent {agent_state.id}")
+        start_time = time.time()
+
         await PassageManager().insert_passage_async(
             agent_state=agent_state,
             agent_id=agent_state.id,
@@ -181,6 +189,9 @@ class LettaCoreToolExecutor(ToolExecutor):
             actor=actor,
         )
         await AgentManager().rebuild_system_prompt_async(agent_id=agent_state.id, actor=actor, force=True)
+
+        duration = time.time() - start_time
+        logger.info(f"Finished archival_memory_insert for agent {agent_state.id}. Duration: {duration:.4f} seconds.")
         return None
 
     async def core_memory_append(self, agent_state: AgentState, actor: User, label: str, content: str) -> Optional[str]:

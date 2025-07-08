@@ -333,7 +333,7 @@ def create_assistant_messages_from_openai_response(
     )
 
 
-def convert_in_context_letta_messages_to_openai(in_context_messages: List[Message], exclude_system_messages: bool = False) -> List[dict]:
+def convert_in_context_letta_messages_to_openai(in_context_messages: List[Message], exclude_system_messages: bool = False, include_timestamps: bool = False) -> List[dict]:
     """
     Flattens Letta's messages (with system, user, assistant, tool roles, etc.)
     into standard OpenAI chat messages (system, user, assistant).
@@ -346,7 +346,7 @@ def convert_in_context_letta_messages_to_openai(in_context_messages: List[Messag
     """
     # Always include the system prompt
     # TODO: This is brittle
-    openai_messages = [in_context_messages[0].to_openai_dict()]
+    openai_messages = [in_context_messages[0].to_openai_dict(include_timestamps=include_timestamps)]
 
     for msg in in_context_messages[1:]:
         if msg.role == MessageRole.system and exclude_system_messages:
@@ -379,11 +379,15 @@ def convert_in_context_letta_messages_to_openai(in_context_messages: List[Messag
                     created_at=msg.created_at,
                 )
 
-        # 2. If role=tool and it's referencing send_message => skip
-        if msg.role == MessageRole.tool and msg.name == "send_message":
-            # Usually 'tool' messages with `send_message` are just status/OK messages
-            # that OpenAI doesn't need to see. So skip them.
-            continue
+        # 2. Handle tool messages
+        if msg.role == MessageRole.tool:
+            # Special handling for send_message tool responses
+            if msg.name == "send_message":
+                # Usually 'tool' messages with `send_message` are just status/OK messages
+                # that OpenAI doesn't need to see. So skip them.
+                continue
+            # For all other tool messages, preserve them in the context
+            # This allows the agent to reference previous tool executions
 
         # 3. User messages might store text in JSON => parse it
         if msg.role == MessageRole.user:
@@ -411,7 +415,7 @@ def convert_in_context_letta_messages_to_openai(in_context_messages: List[Messag
                     pass  # It's not JSON, leave as-is
 
         # Finally, convert to dict using your existing method
-        openai_messages.append(msg.to_openai_dict())
+        openai_messages.append(msg.to_openai_dict(include_timestamps=include_timestamps))
 
     return openai_messages
 

@@ -291,7 +291,7 @@ class LettaAgent(BaseAgent):
                 new_letta_messages=new_in_context_messages,
                 llm_config=agent_state.llm_config,
                 total_tokens=usage.total_tokens,
-                force=False,
+                force=True,  # Always persist messages to agent context
             )
 
         # log request time
@@ -449,7 +449,7 @@ class LettaAgent(BaseAgent):
                 new_letta_messages=new_in_context_messages,
                 llm_config=agent_state.llm_config,
                 total_tokens=usage.total_tokens,
-                force=False,
+                force=True,  # Always persist messages to agent context
             )
 
         return current_in_context_messages, new_in_context_messages, stop_reason, usage
@@ -665,7 +665,7 @@ class LettaAgent(BaseAgent):
                 new_letta_messages=new_in_context_messages,
                 llm_config=agent_state.llm_config,
                 total_tokens=usage.total_tokens,
-                force=False,
+                force=True,  # Always persist messages to agent context
             )
 
         # log time of entire request

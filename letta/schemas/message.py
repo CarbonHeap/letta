@@ -651,6 +651,7 @@ class Message(BaseMessage):
         max_tool_id_length: int = TOOL_CALL_ID_MAX_LEN,
         put_inner_thoughts_in_kwargs: bool = False,
         use_developer_message: bool = False,
+        include_timestamps: bool = False,
     ) -> dict:
         """Go from Message class to ChatCompletion message object"""
 
@@ -671,6 +672,11 @@ class Message(BaseMessage):
             parse_content_parts = True
         else:
             text_content = None
+
+        # Add timestamp to text content if requested
+        if include_timestamps and text_content and self.created_at:
+            timestamp_str = self.created_at.strftime("[%Y-%m-%d %H:%M:%S UTC] ")
+            text_content = timestamp_str + text_content
 
         # TODO(caren) we should eventually support multiple content parts here?
         # ie, actually make dict['content'] type list

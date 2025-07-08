@@ -163,7 +163,7 @@ class VoiceAgent(BaseAgent):
         for _ in range(max_steps):
             # Rebuild memory each loop
             in_context_messages = await self._rebuild_memory_async(in_context_messages, agent_state)
-            openai_messages = convert_in_context_letta_messages_to_openai(in_context_messages, exclude_system_messages=True)
+            openai_messages = convert_in_context_letta_messages_to_openai(in_context_messages, exclude_system_messages=True, include_timestamps=agent_state.include_timestamps)
             openai_messages.extend(in_memory_message_history)
 
             request = self._build_openai_request(openai_messages, agent_state)

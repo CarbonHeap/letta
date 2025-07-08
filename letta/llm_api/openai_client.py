@@ -177,11 +177,16 @@ class OpenAIClient(LLMClientBase):
 
         use_developer_message = accepts_developer_role(llm_config.model)
 
+        # TODO: Get include_timestamps from agent state
+        # For now, we'll default to True to demonstrate the feature
+        include_timestamps = True
+        
         openai_message_list = [
             cast_message_to_subtype(
                 m.to_openai_dict(
                     put_inner_thoughts_in_kwargs=llm_config.put_inner_thoughts_in_kwargs,
                     use_developer_message=use_developer_message,
+                    include_timestamps=include_timestamps,
                 )
             )
             for m in messages

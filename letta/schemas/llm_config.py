@@ -78,6 +78,10 @@ class LLMConfig(BaseModel):
         0,
         description="Configurable thinking budget for extended thinking. Used for enable_reasoner and also for Google Vertex models like Gemini 2.5 Flash. Minimum value is 1024 when used with enable_reasoner.",
     )
+    stream: bool = Field(
+        False,
+        description="Whether to stream the model's output token by token.",
+    )
 
     # FIXME hack to silence pydantic protected namespace warning
     model_config = ConfigDict(protected_namespaces=())
